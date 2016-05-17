@@ -156,8 +156,7 @@ if __name__ == "__main__":
 		test_ids = test['ID']
 		test.drop('ID', axis=1, inplace=True)
 
-		
-		best_params = loads(dumps(cv_scores.find({'model_name':model_id, 'feat_key':feat_key}).sort([('loss_cv_mean', -1)]).limit(1)))[0]
+		best_params = loads(dumps(cv_scores.find({'model_name':model_name, 'feat_key':feat_key}).sort([('loss_cv_mean', -1)]).limit(1)))[0]
 		
 		print("Best params")
 		for k,v in best_params.items():
