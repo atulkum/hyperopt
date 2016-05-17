@@ -31,7 +31,7 @@ global log_handler
 
 trial_counter = 0
 
-def hyperopt_wrapper(param, feat_key, model_name, train):
+def hyperopt_wrapper(param, feat_key, model_name, train, loss_func):
     global trial_counter
     global log_handler
     trial_counter += 1
@@ -51,7 +51,7 @@ def hyperopt_wrapper(param, feat_key, model_name, train):
         print("              %s: %s" % (k,v))
 
     ## evaluate performance
-    loss_cv_mean, loss_cv_std = hyperopt_obj(param, feat_key, model_name, trial_counter, train)
+    loss_cv_mean, loss_cv_std = hyperopt_obj(param, feat_key, model_name, trial_counter, train, loss_func)
 	
     param['model_name'] = model_name
     param['feat_key'] = feat_key
@@ -67,7 +67,7 @@ def hyperopt_wrapper(param, feat_key, model_name, train):
 
     return {'loss': -loss_cv_mean, 'attachments': {'std': loss_cv_std}, 'status': STATUS_OK}
 
-def hyperopt_obj(param, feat_key, model_name, trial_counter, train):
+def hyperopt_obj(param, feat_key, model_name, trial_counter, train, loss_func):
     loss_cv = np.zeros((n_run, n_folds), dtype=float)
 
     for run in range(n_run):
@@ -81,7 +81,7 @@ def hyperopt_obj(param, feat_key, model_name, trial_counter, train):
             y_test = y[validInd]
 	
 	    pred_test = train_predict(X_train, X_test, y_train, y_test, model_name, param)
-	    loss_test = loss(y_test, pred_test)
+	    loss_test = loss_func(y_test, pred_test)
             loss_cv[run,fold] = loss_test
 	    print("Run %i Fold %i  cv Loss:  %.6f" % (run, fold, loss_test))
 
@@ -132,7 +132,7 @@ if __name__ == "__main__":
 		print("Search for the best params")
 		param_space = param_spaces[model_name]
 		trials = Trials()
-		objective = lambda p: hyperopt_wrapper(p, feat_key, model_name, train)
+		objective = lambda p: hyperopt_wrapper(p, feat_key, model_name, train, loss)
 		best_params = fmin(objective, param_space, algo=tpe.suggest,
 				   trials=trials, max_evals=max_evals)
 		for f in int_feat:
