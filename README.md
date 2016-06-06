@@ -1,5 +1,5 @@
-# hyperopt tuning framework
-a general framework for tuning hyper-parameter for machine learning algorithm using hyperopt 
+# hyperopt tuning 
+tuning hyper-parameter
 
 Requirement:
 Assuming mongodb and anaconda already installed.
