@@ -1,5 +1,4 @@
 # hyperopt tuning 
-tuning hyper-parameter
 
 Requirement:
 Assuming mongodb and anaconda already installed.
