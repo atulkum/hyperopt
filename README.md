@@ -1,4 +1,4 @@
-# hyperopt tuning 
+# hyperopt  
 
 Requirement:
 Assuming mongodb and anaconda already installed.
